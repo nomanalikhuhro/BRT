@@ -1,0 +1,43 @@
+[
+  {
+    "ContainingType": "BRT.Controllers.LocationsController",
+    "Method": "Index",
+    "RelativePath": "api/Locations",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BRT.Controllers.LocationsController",
+    "Method": "GetAllLocations",
+    "RelativePath": "api/Locations/allLocations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BRT.Controllers.LocationsController",
+    "Method": "GetSubLocations",
+    "RelativePath": "api/Locations/sublocations/{mainLocation}/{locationid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "mainLocation",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "locationid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

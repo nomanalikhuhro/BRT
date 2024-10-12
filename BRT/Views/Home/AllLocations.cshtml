@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = " - Dashboard";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    #sublocationButtons {
+        display: flex;
+        flex-direction: column;
+        gap: 5px; /* Space between rows */
+        margin-top: 5px;
+    }
+
+    .locationRow {
+        display: flex;
+        justify-content: center; /* Center items horizontally */
+        align-items: center; /* Center items vertically */
+        gap: 5px; /* Space between columns in a row */
+    }
+
+    .locationColumn {
+        display: flex;
+        flex-direction: column;
+        gap: 5px; /* Space between buttons within the same column */
+    }
+
+    .sublocationButton {
+        background-color: #f0f0f0;
+        border: 1px solid #007bff;
+        color: green;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+        font-size: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+    }
+
+    .btn-info {
+        width: 100%;
+        background-color: midnightblue;
+        color: white;
+    }
+
+    .btn-info:hover{
+        background-color: lightgrey;
+        color: white;
+    }
+
+        .active {
+            background-color: lightgrey;
+            
+            
+        }
+    .sublocationButton:hover {
+        background-color: green;
+        color: white;
+        font-size: 20px;
+    }
+
+    .sublocationButton.selected {
+        background-color: #007bff;
+        color: white;
+        border: 2px solid #0056b3;
+    }
+
+    /* New CSS for status 1 (occupied) */
+    .status-occupied {
+        background-color: #ffcccc; /* Light red background */
+        border-color: #ff0000; /* Red border */
+        color: rgb(210,20,20); /* Red text */
+    }
+
+        .status-occupied:hover {
+            background-color: #ff6666; /* Darker red on hover */
+            color: white;
+        }
+
+</style>
+<div class="row p-2">
+<button onclick="loadAllLocations()" class="btn btn-info mb-2">Load All Locations</button>
+</div>
+<hr />
+<div class="row justify-content-center" id="locationTabs">
+    <div class="col-6 col-md-2 mb-2">
+        <button onclick="loadLocations('A')" class="btn btn-info">Alpha</button>
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+        <button onclick="loadLocations('B')" class="btn btn-info">Bravo</button>
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+        <button onclick="loadLocations('C')" class="btn btn-info">Charlie</button>
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+        <button onclick="loadLocations('D')" class="btn btn-info">Delta</button>
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+        <button onclick="loadLocations('E')" class="btn btn-info">Echo</button>
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+        <button onclick="loadLocations('F')" class="btn btn-info">Foxtrot</button>
+    </div>
+</div>
+<hr />
+<div id="sublocationButtons"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    async function loadAllLocations() {
+        const response = await fetch(`/api/Locations/allLocations`);
+        const subLocations = await response.json();
+
+        const groupedLocations = subLocations.reduce((acc, location) => {
+            const prefix = location.name.slice(0, 4); // Assuming the first 4 characters define the group
+            if (!acc[prefix]) {
+                acc[prefix] = [];
+            }
+            acc[prefix].push(location);
+            return acc;
+        }, {});
+
+        const sublocationContainer = document.getElementById('sublocationButtons');
+        sublocationContainer.innerHTML = ''; // Clear previous buttons
+
+        let rowContainer = null;
+        let groupCount = 0;
+
+        for (const group in groupedLocations) {
+            if (groupCount % 20 === 0) {
+                if (groupCount > 0) {
+                    const hr = document.createElement('hr');
+                    sublocationContainer.appendChild(hr);
+                }
+                rowContainer = document.createElement('div');
+                rowContainer.className = 'locationRow';
+                sublocationContainer.appendChild(rowContainer);
+            }
+
+            const column = document.createElement('div');
+            column.className = 'locationColumn';
+
+            groupedLocations[group].reverse().forEach(location => {
+                const button = document.createElement('button');
+                button.textContent = location.name;
+                button.className = 'sublocationButton'; // Base CSS class
+                console.log(location);
+                // Apply status-based styling
+                if (location.status === 1) {
+                    button.classList.add('status-occupied');
+
+                    // Ensure containerLocationName exists before adding it to the innerHTML
+                    const containerLocationName = location.containerLocationName ? location.containerLocationName : 'Unknown';
+
+                    button.innerHTML = `Location: ${location.name}<br /> Status: Occupied <br/> Container: ${containerLocationName}`;
+                }
+
+                button.onclick = () => selectLocation(button); // Handle selection
+                column.appendChild(button);
+            });
+
+            rowContainer.appendChild(column);
+            groupCount++;
+        }
+    }
+
+
+    async function loadLocations(mainLocation) {
+        const response = await fetch(`/api/Locations/sublocations/${mainLocation}/${1}`);
+        const subLocations = await response.json();
+
+        const groupedLocations = subLocations.reduce((acc, location) => {
+            const prefix = location.name.slice(0, 4); // Assuming the first 4 characters define the group
+            if (!acc[prefix]) {
+                acc[prefix] = [];
+            }
+            acc[prefix].push(location);
+            return acc;
+        }, {});
+
+        const sublocationContainer = document.getElementById('sublocationButtons');
+        sublocationContainer.innerHTML = ''; // Clear previous buttons
+
+        let rowContainer = null;
+        let groupCount = 0;
+
+        for (const group in groupedLocations) {
+            if (groupCount % 20 === 0) {
+                if (groupCount > 0) {
+                    const hr = document.createElement('hr');
+                    sublocationContainer.appendChild(hr);
+                }
+                rowContainer = document.createElement('div');
+                rowContainer.className = 'locationRow';
+                sublocationContainer.appendChild(rowContainer);
+            }
+
+            const column = document.createElement('div');
+            column.className = 'locationColumn';
+
+            groupedLocations[group].reverse().forEach(location => {
+                const button = document.createElement('button');
+                button.textContent = location.name;
+                button.className = 'sublocationButton'; // Base CSS class
+                console.log(location);
+                // Apply status-based styling
+                if (location.status === 1) {
+                    button.classList.add('status-occupied');
+
+                    // Ensure containerLocationName exists before adding it to the innerHTML
+                    const containerLocationName = location.containerLocationName ? location.containerLocationName : 'Unknown';
+
+                    button.innerHTML = `Location: ${location.name}<br /> Status: Occupied <br/> Container: ${containerLocationName}`;
+                }
+
+                button.onclick = () => selectLocation(button); // Handle selection
+                column.appendChild(button);
+            });
+
+            rowContainer.appendChild(column);
+            groupCount++;
+        }
+    }
+
+</script>

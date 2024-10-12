@@ -1,0 +1,37 @@
+﻿namespace BRTAPI
+{
+    public class UserViewModel
+    {  // Properties from AspNetUsers table
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string NormalizedUserName { get; set; }
+        public string Email { get; set; }
+        public string NormalizedEmail { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string PasswordHash { get; set; }
+        public string SecurityStamp { get; set; }
+        public string ConcurrencyStamp { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public int AccessFailedCount { get; set; }
+        public bool IsDeleted { get; set; }
+
+        // Additional properties from the second dataset
+        public int UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string CNIC { get; set; }
+        public string ContactNo { get; set; }
+        public string IdentityUserId { get; set; }
+        public int? ShippingAgentId { get; set; }
+        public int CompanyId { get; set; }
+        public int Status { get; set; }
+        public int? ShippingAgentExportId { get; set; }
+        public DateTime? DeleteDate { get; set; }
+
+    }
+}

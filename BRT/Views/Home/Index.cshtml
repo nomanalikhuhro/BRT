@@ -1,0 +1,449 @@
+﻿@{
+    ViewData["Title"] = " - Allocation";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        hr {
+            border: 0;
+            border-top: 2px solid #007bff; /* Adjust the color and thickness as needed */
+            margin: 20px 0; /* Adjust spacing as needed */
+        }
+
+        #sublocationButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Space between rows */
+            margin-top: 20px;
+        }
+
+        .locationRow {
+            display: flex;
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Center items vertically */
+            gap: 20px; /* Space between columns in a row */
+        }
+
+        .locationColumn {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between buttons within the same column */
+        }
+
+        .sublocationButton {
+            background-color: #f0f0f0;
+            border: 2px solid #007bff;
+            color: green;
+            padding: 30px;
+            margin: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+        }
+
+
+            .sublocationButton:hover {
+                background-color: green;
+                color: white;
+                font-size: 30px;
+            }
+
+            .sublocationButton.selected {
+                background-color: #007bff;
+                color: white;
+                border: 2px solid #0056b3;
+            }
+
+        /* New CSS for status 1 (occupied) */
+        .status-occupied {
+            background-color: #ffcccc; /* Light red background */
+            border-color: #ff0000; /* Red border */
+            color: rgb(210,20,20); /* Red text */
+        }
+
+            .status-occupied:hover {
+                background-color: #ff6666; /* Darker red on hover */
+                color: white;
+            }
+
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        #mainheading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; /* Ensures the div takes the full width of the screen */
+            background-color: white; /* Set a background color so content below doesn't show through */
+            z-index: 1000; /* Ensure the div stays on top of other elements */
+            padding: 10px; /* Add padding if necessary */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visual separation */
+        }
+
+        .btn-info {
+            width: 100%;
+            background-color: midnightblue;
+            color: white;
+        }
+
+        .form-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Responsive design */
+        @@media (max-width: 768px) {
+            .col-md-4, .col-md-2 {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <div>
+        <div id="mainheading">
+
+            <form id="containerForm" asp-action="PlaceContainer" asp-controller="Home">
+                <div class="row mt-5">
+                    <div class="col-md-4"></div>
+
+                    <div class="col-md-4 text-center">
+                        <label class="form-label">Container No</label>
+                        <select id="containerNoDropdown" class="form-select">
+                            <option value="">--Select ContainerNo--</option>
+                        </select>
+                        
+                    </div>
+                    <span class="text-capitalize text-center pt-1" id="ConatinerSizeSpan"></span>
+
+
+                    <div class="col-md-4"></div>
+                </div>
+            </form>
+
+           @*  <hr />
+
+            <div class="text-center my-3">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="containerSize" value="1" id="containerSize1">
+                    <label class="form-check-label" for="containerSize1">20 Feet Container</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="containerSize" value="2" id="containerSize2">
+                    <label class="form-check-label" for="containerSize2">40 Feet Container</label>
+                </div>
+            </div> *@
+
+            <hr />
+
+            <div class="row justify-content-center" id="locationTabs">
+                <div class="col-6 col-md-2 mb-2">
+                    <button onclick="loadLocations('A')" class="btn btn-info">Alpha</button>
+                </div>
+                <div class="col-6 col-md-2 mb-2">
+                    <button onclick="loadLocations('B')" class="btn btn-info">Bravo</button>
+                </div>
+                <div class="col-6 col-md-2 mb-2">
+                    <button onclick="loadLocations('C')" class="btn btn-info">Charlie</button>
+                </div>
+                <div class="col-6 col-md-2 mb-2">
+                    <button onclick="loadLocations('D')" class="btn btn-info">Delta</button>
+                </div>
+                <div class="col-6 col-md-2 mb-2">
+                    <button onclick="loadLocations('E')" class="btn btn-info">Echo</button>
+                </div>
+                <div class="col-6 col-md-2 mb-2">
+                    <button onclick="loadLocations('F')" class="btn btn-info">Foxtrot</button>
+                </div>
+            </div>
+            <hr />
+            <div class="text-center" id="btnSubmit" style="display:none;">
+                <button type="button" class="btn btn-primary" onclick="submitContainerData()">Place Container</button>
+            </div>
+        </div>
+        <hr />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <div id="sublocationButtons" class="align-content-center"></div>
+    </div>
+    <!-- Include jQuery -->
+
+    <script>
+        let ContainerSize;
+        var ContainerSpan = document.getElementById('ConatinerSizeSpan');
+        const sublocationContainer = document.getElementById('sublocationButtons');
+
+
+        //New code start
+        let selectedLocations = []; // Array to store the selected locations
+        let maxSelections = 0; // Default to allow only 1 location by default
+        var div = document.getElementById('btnSubmit');
+
+        $(document).ready(function () {
+            // Initialize Select2 on the container number dropdown
+            $('#containerNoDropdown').select2({
+                placeholder: "--Select ContainerNo--",
+                allowClear: true,
+                width: '100%' // Makes sure it takes up the full width
+            });
+
+            $('#containerNoDropdown').on('change', function () {
+                var selectedContainerNo = this.value;
+
+                if (selectedContainerNo) {
+                    fetchContainerDetails(selectedContainerNo);
+                    // alert(selectedContainerNo);
+                } else {
+                    // Clear the details if no container is selected
+                    //$('#containerDetails').html('');
+                }
+
+                sublocationContainer.innerHTML = ''; // Clear previous buttons
+                document.getElementById('btnSubmit').style.display = 'none';
+                selectedLocations = [];
+
+            });
+
+
+        });
+        function fetchContainerDetails(containerNo) {
+            var apiUrl = '/Home/GetContainerSize?containerNo=' + containerNo;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Assuming 'data.size' contains the size of the container
+                    ContainerSize = data.size;
+                    ContainerSpan.innerHTML = "Size: " + ContainerSize;
+                })
+                .catch(error => {
+                    console.error('Error fetching container details:', error);
+                });
+        }
+
+       
+
+        
+        function selectLocation(button) {
+            // Check if the button is already selected
+
+     
+            if (ContainerSize == 20) {
+                maxSelections = 1; // Allow only one location to be selected
+            }
+            if (ContainerSize == 40) {
+                maxSelections = 2; // Allow two locations to be selected
+            }
+
+            var msg = `<h4> You can only select ${maxSelections} location(s). </h4> <br>
+                                                   Because Your Container Size is: ${ContainerSize}`;
+
+            
+            if (button.classList.contains('selected')) {
+                // If it's already selected, remove it
+                button.classList.remove('selected');
+                selectedLocations = selectedLocations.filter(loc => loc !== button.textContent);
+            } else {
+                // If adding a new selection, check if the limit is reached
+                if (selectedLocations.length >= maxSelections) {
+                    Swal.fire({
+                        title: 'Selection Limit Reached',
+                        html: msg,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // Exit if selection limit is reached
+                }
+
+                // Add 'selected' class to the clicked button
+                if (!button.classList.contains('status-occupied')) {
+                    button.classList.add('selected');
+                    selectedLocations.push(button.textContent); // Store the selected location
+
+                }
+
+            }
+
+            // Update the display of the submit button
+            if (!button.classList.contains('status-occupied')) {
+                div.style.display = selectedLocations.length >= maxSelections ? "block" : "none";
+            }
+        }
+        async function loadLocations(mainLocation) {
+            const response = await fetch(`/api/Locations/sublocations/${mainLocation}/${1}`);
+            const subLocations = await response.json();
+
+            const groupedLocations = subLocations.reduce((acc, location) => {
+                const prefix = location.name.slice(0, 4); // Assuming the first 4 characters define the group
+                if (!acc[prefix]) {
+                    acc[prefix] = [];
+                }
+                acc[prefix].push(location);
+                return acc;
+            }, {});
+
+          
+            sublocationContainer.innerHTML = ''; // Clear previous buttons
+
+            let rowContainer = null;
+            let groupCount = 0;
+
+            for (const group in groupedLocations) {
+                if (groupCount % 6 === 0) {
+                    if (groupCount > 0) {
+                        const hr = document.createElement('hr');
+                        sublocationContainer.appendChild(hr);
+                    }
+                    rowContainer = document.createElement('div');
+                    rowContainer.className = 'locationRow';
+                    sublocationContainer.appendChild(rowContainer);
+                }
+
+                const column = document.createElement('div');
+                column.className = 'locationColumn';
+
+                groupedLocations[group].reverse().forEach(location => {
+                    const button = document.createElement('button');
+                    button.textContent = location.name;
+                    button.className = 'sublocationButton'; // Base CSS class
+                    console.log(location);
+                    // Apply status-based styling
+                    if (location.status === 1) {
+                        button.classList.add('status-occupied');
+
+                        // Ensure containerLocationName exists before adding it to the innerHTML
+                        const containerLocationName = location.containerLocationName ? location.containerLocationName : 'Unknown';
+
+                        button.innerHTML = `Location: ${location.name}<br /> Status: Occupied <br/> Container: ${containerLocationName}`;
+                    }
+
+                    button.onclick = () => selectLocation(button); // Handle selection
+                    column.appendChild(button);
+                });
+
+                rowContainer.appendChild(column);
+                groupCount++;
+            }
+        }
+
+        async function submitContainerData() {
+            var containerNoDropdown = document.getElementById('containerNoDropdown');
+            const containerNo = containerNoDropdown.options[containerNoDropdown.selectedIndex].text;
+
+
+
+            const selectedDivs = document.querySelectorAll('.selected');
+
+            if (!containerNo || containerNoDropdown.selectedIndex === 0) {
+                Swal.fire({
+                    title: 'Validation Error',
+                    text: "Please select a valid ContainerNo.",
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            if (selectedLocations.length !== maxSelections) {
+                Swal.fire({
+                    title: 'Validation Error',
+                    text: `Please select exactly ${maxSelections} location(s).`,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            const locationNames = selectedLocations.join(", "); // Combine all selected locations
+
+            const data = {
+                ContainerNo: containerNo,
+                Size: ContainerSize,
+                locationNames: locationNames
+            };
+
+            var message = `<h3> Container Placed Successfully. </h3> <br>
+                                           Container No: ${data.ContainerNo} <br>
+                                           Location(s): ${data.locationNames}`;
+
+            var message2 = `<h3> You are about to place the container. </h3> <br>
+                                            Container No: ${data.ContainerNo} <br>
+                                            Location(s): ${data.locationNames}`;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                html: message2,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, place it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Home/PlaceContainer',
+                        type: 'POST',
+                        data: data,
+                        success: function (response) {
+                            Swal.fire({
+                                title: 'Success Message',
+                                html: message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload(true);
+                                }
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error('Error response:', jqXHR.responseText);
+                            Swal.fire({
+                                title: 'Error',
+                                text: `Failed to place container. Error: ${jqXHR.status} ${errorThrown}`,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $.getJSON('@Url.Action("GetContainerNos", "Home")', function (data) {
+                $.each(data, function (index, value) {
+                    $('#containerNoDropdown').append('<option value="' + value + '">' + value + '</option>');
+                });
+            });
+        });
+    </script>
+
+
+</body>
+</html>

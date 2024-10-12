@@ -1,0 +1,108 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="~/css/style.css">
+
+    <title>BRT  @ViewData["Title"]</title>
+</head>
+<body>
+
+
+    <aside class="sidebar">
+        <div class="toggle">
+            <a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
+                <span></span>
+            </a>
+        </div>
+        <div class="side-inner">
+
+            <div class="profile">
+                <img src="~/images/person_4.jpg" alt="Image" class="img-fluid">
+                <h3 class="name">BRT</h3>
+                @if (Context.Session.GetString("UserName") != null)
+                {
+                     <a href="" class="country"> @Context.Session.GetString("UserName") </a>
+                }
+            </div>
+
+
+            <div class="nav-menu">
+                <ul>
+                    <li class="accordion">
+                        <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsible">
+                            <i class="icon-home mr-3"></i>BRT
+                        </a>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+                            <div>
+                                <ul>
+                                    <li><a asp-action="AllLocations" asp-controller="Home">BRT Dashboard</a></li>
+                                    <li><a asp-action="Index" asp-controller="Home">BRT Allocation</a></li>
+                                    <li><a asp-action="GetContainerLocation" asp-controller="Home">BRT History</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                   @*  <li class="accordion">
+                        <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsible">
+                            <span class="icon-search2 mr-3"></span>Explore
+                        </a>
+
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingOne">
+                            <div>
+                                <ul>
+                                    <li><a href="#">Interior</a></li>
+                                    <li><a href="#">Food</a></li>
+                                    <li><a href="#">Travel</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </li> *@
+                 @*    <li><a href="#"><span class="icon-notifications mr-3"></span>Notifications</a></li>
+                    <li><a href="#"><span class="icon-location-arrow mr-3"></span>Direct</a></li>
+                    <li><a href="#"><span class="icon-pie-chart mr-3"></span>Stats</a></li> *@
+                    
+                    
+                    <li><a asp-action="Logout" asp-controller="Accounts"><span class="icon-sign-out mr-3"></span>Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </aside>
+    <main>
+        <div class="site-section">
+            <div class="p-2">
+                   @RenderBody()
+            </div>
+        </div>
+    </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+   @*  <script src="~/js/jquery-3.3.1.min.js"></script> *@
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/main.js"></script>
+</body>
+</html>
